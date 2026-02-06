@@ -1369,10 +1369,6 @@
                                     <span class="option-icon">🌰</span>
                                     <div class="option-label">لوزيات</div>
                                 </div>
-                                <div class="option-card" data-crop="beans">
-                                    <span class="option-icon">🫘</span>
-                                    <div class="option-label">قوارص</div>
-                                </div>
                                 <div class="option-card" data-crop="grains">
                                     <span class="option-icon">🌾</span>
                                     <div class="option-label">حبوب</div>
@@ -2504,8 +2500,8 @@
         
         // Track if user selected tree crop
         let isTreeCrop = false;
-        const treeCrops = ['olive', 'beans', 'almond', 'grape', 'citrus']; // الأشجار + العنب والقوارص
-        const firebaseCrops = ['olive', 'beans', 'almond', 'grains', 'fennel', 'grape', 'citrus']; // المحاصيل اللي عندهم حلول في Firebase
+        const treeCrops = ['olive', 'almond', 'grape', 'citrus']; // الأشجار فقط
+        const firebaseCrops = ['olive', 'beans', 'almond', 'grains', 'fennel', 'grape', 'citrus']; // المحاصيل اللي عندهم حلول في Firebase (beans موجود في Firebase)
 
         document.addEventListener('DOMContentLoaded', function() {
             setupConsultationForm();
