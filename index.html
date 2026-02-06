@@ -1207,7 +1207,7 @@
     <<header class="main-header">
     <div class="header-content">
         <div class="logo-container">
-            <img src="images/icon-192.png" alt="Logo" class="logo-image">
+            <img src="fla7in-logo-original.jpg" alt="فلاحين Logo" class="logo-image" style="border-radius: 50%; width: 60px; height: 60px; object-fit: cover;">
             <div class="logo-content">
                 <h1 class="logo-title">فلاحين</h1>
                 <p class="logo-subtitle">منصتك للفلاحة الذكية</p>
@@ -1380,6 +1380,10 @@
                                 <div class="option-card" data-crop="olive">
                                     <span class="option-icon">🫒</span>
                                     <div class="option-label">زيتون</div>
+                                </div>
+                                <div class="option-card" data-crop="citrus">
+                                    <span class="option-icon">🍊</span>
+                                    <div class="option-label">قوارص</div>
                                 </div>
                             </div>
                         </div>
@@ -2500,8 +2504,8 @@
         
         // Track if user selected tree crop
         let isTreeCrop = false;
-        const treeCrops = ['olive', 'beans', 'almond']; // الأشجار فقط
-        const firebaseCrops = ['olive', 'beans', 'almond', 'grains', 'fennel']; // المحاصيل اللي عندهم حلول في Firebase
+        const treeCrops = ['olive', 'beans', 'almond', 'grape', 'citrus']; // الأشجار + العنب والقوارص
+        const firebaseCrops = ['olive', 'beans', 'almond', 'grains', 'fennel', 'grape', 'citrus']; // المحاصيل اللي عندهم حلول في Firebase
 
         document.addEventListener('DOMContentLoaded', function() {
             setupConsultationForm();
@@ -3153,7 +3157,8 @@
                 'strawberry': 'الفراولة',
                 'melon': 'الدلاع',
                 'almond': 'اللوز',
-                'citrus': 'القوارص'
+                'citrus': 'القوارص',
+                'beans': 'الفول'
             };
             return names[crop] || crop;
         }
