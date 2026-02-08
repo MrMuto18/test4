@@ -1142,6 +1142,16 @@
             font-size: 1.4em;
             color: var(--text-light);
         }
+        
+        /* زر الاستشارة في Hero */
+        .hero-cta-btn:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 8px 25px rgba(45, 134, 89, 0.4) !important;
+        }
+        
+        .hero-cta-btn:active {
+            transform: translateY(-1px) !important;
+        }
     </style>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -1232,6 +1242,12 @@
     <div class="hero-content">
         <h2 class="hero-welcome">مرحباً بك في فلاحين</h2>
         <p class="hero-desc">نساعدك في فلاحتك باستشارات ذكية فورية ومنتجات عالية الجودة</p>
+        
+        <!-- زر الاستشارة المباشرة -->
+        <a href="consultation.html" class="hero-cta-btn" style="display: inline-block; margin-top: 25px; padding: 16px 40px; background: linear-gradient(135deg, #2d8659, #1e6b45); color: white; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 1.15em; box-shadow: 0 6px 20px rgba(45, 134, 89, 0.3); transition: all 0.3s ease;">
+            <i class="fas fa-rocket" style="margin-left: 10px;"></i>
+            ابدأ استشارة فلاحية مجانية
+        </a>
     </div>
 </div>
         <!-- Statistics -->
