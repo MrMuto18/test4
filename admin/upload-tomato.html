@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحميل حلول الطماطم - Firebase</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d8659 0%, #1e6b45 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 { color: #2d8659; text-align: center; margin-bottom: 30px; }
+        .status {
+            background: #f5f1e8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .status div { padding: 8px; margin-bottom: 5px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border-right: 4px solid #28a745; }
+        .error { background: #f8d7da; color: #721c24; border-right: 4px solid #dc3545; }
+        .info { background: #d1ecf1; color: #0c5460; border-right: 4px solid #17a2b8; }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #2d8659;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background: #1e6b45; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍅 تحميل حلول الطماطم إلى Firebase</h1>
+        <div class="status" id="status">
+            <div class="info">⏳ جاهز للبدء...</div>
+        </div>
+        <button onclick="uploadTomatoSolutions()" id="uploadBtn">
+            🚀 تحميل حلول الطماطم (3 فترات)
+        </button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, query, where, getDocs, deleteDoc, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC-z9igQOo7PbKiTzhi2fIRrHHuUXhN6AU",
+            authDomain: "fla7in.firebaseapp.com",
+            projectId: "fla7in",
+            storageBucket: "fla7in.firebasestorage.app",
+            messagingSenderId: "463607450723",
+            appId: "1:463607450723:web:04d95f04873d15634bfc56",
+            measurementId: "G-WXN72JJ5DP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        function addStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = message;
+            statusDiv.appendChild(div);
+            statusDiv.scrollTop = statusDiv.scrollHeight;
+        }
+
+        window.uploadTomatoSolutions = async function() {
+            const btn = document.getElementById('uploadBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ جاري التحميل...';
+            
+            document.getElementById('status').innerHTML = '';
+            addStatus('🚀 بدء تحميل حلول الطماطم...', 'info');
+
+            try {
+                // حذف الحلول القديمة للطماطم
+                addStatus('🗑️ حذف الحلول القديمة...', 'info');
+                const oldSnapshot = await getDocs(
+                    query(collection(db, 'solutions'), where('crop', '==', 'tomato'))
+                );
+                
+                for (const doc of oldSnapshot.docs) {
+                    await deleteDoc(doc.ref);
+                }
+                addStatus(`✅ تم حذف ${oldSnapshot.size} حل قديم`, 'success');
+
+                // إضافة الحلول الجديدة
+                addStatus('📦 إضافة الحلول الجديدة...', 'info');
+
+                const solutions = [
+                    // الفترة 1: 15-45 يوم (بعد الغراسة)
+                    {
+                        crop: 'tomato',
+                        cropArabic: 'طماطم',
+                        period: 'short',
+                        periodName: 'من 15 إلى 45 يوم بعد الغراسة',
+                        problem: 'دفعة قوية للنمو الخضري',
+                        solution: '',
+                        products: [
+                            {
+                                name: 'سماد ورقي NPK متوازن (20-20-20)',
+                                dosage: '2 كغ / هكتار',
+                                purpose: 'يعطي دفعة قوية للنمو الخضري ويقوّي النبات في البداية',
+                                icon: '🌿'
+                            },
+                            {
+                                name: 'أحماض أمينية + طحالب بحرية',
+                                dosage: '0.5 – 1 لتر / هكتار',
+                                purpose: 'يحسّن الامتصاص ويخفّف السترس بعد الرشة الأولى',
+                                icon: '🌊'
+                            },
+                            {
+                                name: 'كالسيوم + بورون (رش ورقي)',
+                                dosage: '1 لتر / هكتار',
+                                purpose: 'يقوّي الأنسجة والقمم النامية ويحضّر النبات للإزهار الجاي',
+                                icon: '🦴'
+                            },
+                            {
+                                name: 'مبيد فطري وقائي (مانكوزيب أو Azoxystrobin)',
+                                dosage: 'حسب الجرعة الموصى بها',
+                                purpose: 'وقاية من اللفحة والأمراض الورقية في مرحلة نمو سريع',
+                                icon: '🛡️'
+                            },
+                            {
+                                name: 'مبيد حشري (Imidacloprid أو Acetamiprid)',
+                                dosage: 'حسب المنتَج',
+                                purpose: 'مكافحة المنّ، الذبابة البيضاء، والتربس اللي يضعّفو النبات بدري',
+                                icon: '🐛'
+                            }
+                        ],
+                        timing: 'بعد الغراسة',
+                        active: true,
+                        createdAt: serverTimestamp(),
+                        addedBy: 'admin'
+                    },
+                    
+                    // الفترة 2: 45-60 يوم (نهاية نمو خضري + بداية إزهار وعقد)
+                    {
+                        crop: 'tomato',
+                        cropArabic: 'طماطم',
+                        period: 'medium',
+                        periodName: 'من 45 إلى 60 يوم (نهاية نمو خضري + بداية إزهار وعقد)',
+                        problem: 'دفع الإزهار وتقوية العقد',
+                        solution: '',
+                        products: [
+                            {
+                                name: 'سماد ورقي عالي الفوسفور (13-40-13)',
+                                dosage: '2 كغ / هكتار',
+                                purpose: 'يدفع النبات للإزهار ويقوّي العقد الأول',
+                                icon: '🌸'
+                            },
+                            {
+                                name: 'طحالب بحرية + أحماض أمينية',
+                                dosage: '1 لتر / هكتار',
+                                purpose: 'يحسّن العقد ويقلّل تساقط الزهرة',
+                                icon: '🌊'
+                            },
+                            {
+                                name: 'بورون + زنك (Foliar B + Zn)',
+                                dosage: '0.5 – 1 لتر / هكتار',
+                                purpose: 'عناصر أساسية للإزهار والعقد المنتظم',
+                                icon: '⚡'
+                            },
+                            {
+                                name: 'مبيد فطري (Azoxystrobin أو Difenoconazole)',
+                                dosage: 'حسب الجرعة الموصى بها',
+                                purpose: 'حماية الأزهار من اللفحة والبياض في فترة حساسة',
+                                icon: '🛡️'
+                            },
+                            {
+                                name: 'مبيد حشري (Acetamiprid أو Spinosad)',
+                                dosage: 'حسب المنتَج',
+                                purpose: 'مكافحة التربس والذبابة البيضاء اللي تأثّر مباشرة على العقد',
+                                icon: '🐛'
+                            }
+                        ],
+                        timing: 'نهاية نمو خضري',
+                        active: true,
+                        createdAt: serverTimestamp(),
+                        addedBy: 'admin'
+                    },
+                    
+                    // الفترة 3: 60-90 يوم (تكوين الثمار + بداية التضخيم)
+                    {
+                        crop: 'tomato',
+                        cropArabic: 'طماطم',
+                        period: 'long',
+                        periodName: 'من 60 إلى 90 يوم (تكوين الثمار + بداية التضخيم)',
+                        problem: 'تضخيم الثمار وتحسين الجودة',
+                        solution: '',
+                        products: [
+                            {
+                                name: 'سيترات البوتاسيوم (Foliar Potassium Citrate)',
+                                dosage: '2 – 3 كغ / هكتار',
+                                purpose: 'يضخّم الثمار، يحسّن اللون والطعم، ويساعد على نقل السكريات',
+                                icon: '🍅'
+                            },
+                            {
+                                name: 'طحالب بحرية + أحماض أمينية',
+                                dosage: '1 لتر / هكتار',
+                                purpose: 'يقلّل السترس وقت الحمل ويثبّت العقد',
+                                icon: '🌊'
+                            },
+                            {
+                                name: 'كالسيوم ورقي (Calcium nitrate أو Ca chelate)',
+                                dosage: '1 – 1.5 لتر / هكتار',
+                                purpose: 'يمنع تعفّن الطرف الزهري ويقوّي جدار الثمرة',
+                                icon: '🦴'
+                            },
+                            {
+                                name: 'مبيد فطري (Azoxystrobin + Mancozeb أو بديل بالتناوب)',
+                                dosage: 'حسب الجرعة',
+                                purpose: 'حماية الأوراق والثمار من اللفحة في مرحلة حساسة',
+                                icon: '🛡️'
+                            },
+                            {
+                                name: 'مبيد حشري (Spinosad أو Abamectin)',
+                                dosage: 'حسب المنتَج',
+                                purpose: 'مكافحة حفّار الأوراق، التربس، والعناكب',
+                                icon: '🐛'
+                            }
+                        ],
+                        timing: 'تكوين الثمار',
+                        active: true,
+                        createdAt: serverTimestamp(),
+                        addedBy: 'admin'
+                    },
+                    
+                    // الفترة 4: من 90 يوم إلى الجني (نضج الثمار + تحسين الجودة)
+                    {
+                        crop: 'tomato',
+                        cropArabic: 'طماطم',
+                        period: 'harvest',
+                        periodName: 'من 90 يوم إلى الجني (نضج الثمار + تحسين الجودة)',
+                        problem: 'تسريع التلوين وتحسين الجودة',
+                        solution: '',
+                        products: [
+                            {
+                                name: 'سيترات البوتاسيوم (Foliar)',
+                                dosage: '2 كغ / هكتار',
+                                purpose: 'يسرّع التلوين، يرفع السكر، ويحسّن الصلابة والطعم',
+                                icon: '🍅'
+                            },
+                            {
+                                name: 'كالسيوم ورقي (Chelated Ca أو Ca nitrate)',
+                                dosage: '1 لتر / هكتار',
+                                purpose: 'يحافظ على صلابة الثمرة ويطوّل عمرها بعد الجني',
+                                icon: '🦴'
+                            },
+                            {
+                                name: 'أحماض أمينية خفيفة',
+                                dosage: '0.5 لتر / هكتار',
+                                purpose: 'يخفّف الإجهاد ويحافظ على نشاط النبات آخر الدورة',
+                                icon: '🌊'
+                            },
+                            {
+                                name: 'مبيد فطري خفيف وآمن (Copper low dose أو Azoxystrobin)',
+                                dosage: 'حسب الجرعة - عند الحاجة حسب الطقس',
+                                purpose: 'حماية نهائية من أعفان ونقط الأوراق قبل الجني',
+                                icon: '🛡️'
+                            },
+                            {
+                                name: 'مبيد حشري فترة أمان قصيرة (Spinosad)',
+                                dosage: 'حسب المنتَج - عند وجود آفات',
+                                purpose: 'يحمي الثمار بدون مشاكل متبقيات',
+                                icon: '🐛'
+                            }
+                        ],
+                        timing: 'نضج الثمار',
+                        notes: '🔚 قبل الجني بـ 7–10 أيام نوقف أي رش كيميائي',
+                        active: true,
+                        createdAt: serverTimestamp(),
+                        addedBy: 'admin'
+                    }
+                ];
+
+                let count = 0;
+                for (const solution of solutions) {
+                    await addDoc(collection(db, 'solutions'), solution);
+                    count++;
+                    addStatus(`   ✓ ${solution.periodName} - ${solution.products.length} منتجات`, 'success');
+                }
+
+                addStatus(`✅ تمت إضافة ${count} حل للطماطم!`, 'success');
+
+                // التحقق
+                const verifySnapshot = await getDocs(
+                    query(collection(db, 'solutions'), where('crop', '==', 'tomato'))
+                );
+                
+                addStatus(`📊 العدد النهائي: ${verifySnapshot.size} حل`, 'success');
+                addStatus('🎉 تم التحميل بنجاح! الطماطم جاهزة في الموقع!', 'success');
+                
+                btn.textContent = '✅ تم التحميل بنجاح';
+                btn.style.background = '#28a745';
+
+            } catch (error) {
+                console.error('Error:', error);
+                addStatus(`❌ خطأ: ${error.message}`, 'error');
+                btn.disabled = false;
+                btn.textContent = '🔄 إعادة المحاولة';
+            }
+        };
+    </script>
+</body>
+</html>
