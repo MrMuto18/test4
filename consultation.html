@@ -585,9 +585,9 @@
                     <!-- الاسم -->
                     <div style="margin-bottom: 22px;">
                         <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-dark); font-size: 0.95em; text-align: right;">
-                            <i class="fas fa-user" style="margin-left: 5px;"></i> الاسم الكامل
+                            <i class="fas fa-user" style="margin-left: 5px;"></i> الاسم الكامل <span style="color: red;">*</span>
                         </label>
-                        <input type="text" id="userName" placeholder="مثال: محمد بن علي" 
+                        <input type="text" id="userName" placeholder="مثال: محمد بن علي" required
                             style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 1em; background: #f8f9fa; transition: all 0.3s; font-family: 'Tajawal', sans-serif;"
                             onfocus="this.style.background='white'; this.style.borderColor='var(--primary-green)'"
                             onblur="this.style.background='#f8f9fa'; this.style.borderColor='#e0e0e0'">
@@ -596,20 +596,21 @@
                     <!-- الهاتف -->
                     <div style="margin-bottom: 22px;">
                         <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-dark); font-size: 0.95em; text-align: right;">
-                            <i class="fas fa-phone" style="margin-left: 5px;"></i> رقم الهاتف
+                            <i class="fas fa-phone" style="margin-left: 5px;"></i> رقم الهاتف <span style="color: red;">*</span>
                         </label>
-                        <input type="tel" id="userPhone" placeholder="مثال: 20123456" 
+                        <input type="tel" id="userPhone" placeholder="مثال: 20123456" required pattern="[0-9]{8}"
                             style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 1em; background: #f8f9fa; transition: all 0.3s; font-family: 'Tajawal', sans-serif;"
                             onfocus="this.style.background='white'; this.style.borderColor='var(--primary-green)'"
-                            onblur="this.style.background='#f8f9fa'; this.style.borderColor='#e0e0e0'">
+                            onblur="this.style.background='#f8f9fa'; this.style.borderColor='#e0e0e0'"
+                            title="أدخل 8 أرقام">
                     </div>
                     
                     <!-- المنطقة -->
                     <div style="margin-bottom: 25px;">
                         <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-dark); font-size: 0.95em; text-align: right;">
-                            <i class="fas fa-map-marker-alt" style="margin-left: 5px;"></i> المنطقة
+                            <i class="fas fa-map-marker-alt" style="margin-left: 5px;"></i> المنطقة <span style="color: red;">*</span>
                         </label>
-                        <select id="userRegion" 
+                        <select id="userRegion" required
                             style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 1em; background: #f8f9fa; font-family: 'Tajawal', sans-serif; cursor: pointer; transition: all 0.3s;"
                             onfocus="this.style.background='white'; this.style.borderColor='var(--primary-green)'"
                             onblur="this.style.background='#f8f9fa'; this.style.borderColor='#e0e0e0'">
@@ -711,7 +712,8 @@
             salinity: '',
             period: '',
             name: '',
-            phone: ''
+            phone: '',
+            region: ''
         };
 
         let currentQuestion = 1;
@@ -896,9 +898,39 @@
         }
 
         window.showResults = async function() {
+            // Validate required fields
+            const userName = document.getElementById('userName').value.trim();
+            const userPhone = document.getElementById('userPhone').value.trim();
+            const userRegion = document.getElementById('userRegion').value;
+            
+            if (!userName) {
+                alert('⚠️ الرجاء إدخال الاسم الكامل');
+                document.getElementById('userName').focus();
+                return;
+            }
+            
+            if (!userPhone) {
+                alert('⚠️ الرجاء إدخال رقم الهاتف');
+                document.getElementById('userPhone').focus();
+                return;
+            }
+            
+            if (userPhone.length !== 8 || !/^\d+$/.test(userPhone)) {
+                alert('⚠️ رقم الهاتف يجب أن يكون 8 أرقام');
+                document.getElementById('userPhone').focus();
+                return;
+            }
+            
+            if (!userRegion) {
+                alert('⚠️ الرجاء اختيار المنطقة');
+                document.getElementById('userRegion').focus();
+                return;
+            }
+            
             // Get user data
-            formData.name = document.getElementById('userName').value;
-            formData.phone = document.getElementById('userPhone').value;
+            formData.name = userName;
+            formData.phone = userPhone;
+            formData.region = userRegion;
 
             // Show loading
             const modal = document.getElementById('resultsModal');
