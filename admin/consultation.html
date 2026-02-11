@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الاستشارات - فلاحين</title>
+    <title>استشارة فلاحية - فلاحين</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -14,16 +13,14 @@
     
     <style>
         :root {
-            --primary: #2d8659;
-            --primary-dark: #1e6b45;
-            --danger: #e74c3c;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --info: #3498db;
-            --dark: #1a1a1a;
-            --light: #f8f9fa;
-            --border: #dee2e6;
-            --shadow: rgba(0, 0, 0, 0.1);
+            --primary-green: #2d8659;
+            --light-green: #4caf50;
+            --dark-green: #1e6b45;
+            --accent-orange: #f49d37;
+            --warm-beige: #f5f1e8;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --light-gray: #ecf0f1;
         }
 
         * {
@@ -33,322 +30,225 @@
         }
 
         body {
-            font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Tajawal', 'Segoe UI', sans-serif;
+            background: #f8f6f3;
             min-height: 100vh;
+            padding: 0;
+            direction: rtl;
         }
 
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            right: 0;
-            top: 0;
-            width: 280px;
-            height: 100vh;
-            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
             padding: 30px 20px;
-            box-shadow: -5px 0 20px var(--shadow);
-            z-index: 1000;
-            overflow-y: auto;
         }
 
-        .logo {
+        .header {
             text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        .logo-icon {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
-
-        .logo h1 {
+        .header h1 {
+            color: var(--primary-green);
             font-size: 2em;
-            font-weight: 800;
-            margin-bottom: 5px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
             margin-bottom: 10px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: white;
-            text-decoration: none;
-        }
-
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateX(-5px);
-        }
-
-        .nav-item.active {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        .nav-item i {
-            font-size: 1.3em;
-            margin-left: 15px;
-            width: 25px;
-        }
-
-        .admin-info {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .admin-avatar {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 1.5em;
-        }
-
-        .logout-btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-family: 'Tajawal', sans-serif;
-            font-weight: 700;
-            transition: all 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: #c0392b;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-right: 280px;
-            padding: 30px;
-            min-height: 100vh;
-        }
-
-        .page-header {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px var(--shadow);
-            margin-bottom: 30px;
-        }
-
-        .page-header h2 {
-            font-size: 2em;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
             gap: 15px;
         }
 
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+        .header p {
+            color: var(--text-light);
+            font-size: 1em;
         }
 
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px var(--shadow);
-            display: flex;
+        .back-btn {
+            display: inline-flex;
             align-items: center;
-            gap: 20px;
-            transition: transform 0.3s;
+            gap: 8px;
+            padding: 10px 20px;
+            background: white;
+            color: var(--primary-green);
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            font-size: 0.95em;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
+        .back-btn:hover {
+            background: #f8f9fa;
+            border-color: var(--primary-green);
         }
 
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
+        .progress-container {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e8e8e8;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green), var(--light-green));
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .question-card {
+            background: white;
+            padding: 40px 35px;
+            border-radius: 20px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-title {
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 12px;
+            margin-bottom: 35px;
+            font-size: 1.4em;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .question-icon {
             font-size: 1.8em;
         }
 
-        .stat-info h3 {
-            font-size: 2em;
-            color: var(--dark);
-            margin-bottom: 5px;
-        }
-
-        .stat-info p {
-            color: #666;
-        }
-
-        /* Filters */
-        .filters-card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px var(--shadow);
-            margin-bottom: 20px;
-        }
-
-        .filters-grid {
+        .options-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
+            margin-bottom: 30px;
         }
 
-        .filter-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 700;
-            color: var(--dark);
-        }
-
-        .filter-group input,
-        .filter-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-family: 'Tajawal', sans-serif;
-            transition: border-color 0.3s;
-        }
-
-        .filter-group input:focus,
-        .filter-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        /* Table */
-        .table-card {
-            background: white;
+        .option-card {
+            background: #f8f9fa;
+            padding: 25px 20px;
             border-radius: 12px;
-            box-shadow: 0 5px 15px var(--shadow);
-            overflow: hidden;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #e9ecef;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .option-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: var(--primary-green);
         }
 
-        thead {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
+        .option-card.selected {
+            background: var(--primary-green) !important;
+            color: white !important;
+            border-color: var(--dark-green) !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 8px 20px rgba(45, 134, 89, 0.4) !important;
+        }
+        
+        .option-card.selected .option-label {
+            color: white !important;
         }
 
-        th {
-            padding: 18px 15px;
-            text-align: right;
-            font-weight: 700;
+        .option-icon {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 10px;
         }
 
-        td {
-            padding: 15px;
-            border-bottom: 1px solid var(--border);
+        .option-label {
+            font-weight: bold;
+            font-size: 1.1em;
         }
 
-        tbody tr:hover {
-            background: var(--light);
-        }
-
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 700;
-        }
-
-        .status-new {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-contacted {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .status-completed {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .action-btns {
+        .nav-buttons {
             display: flex;
-            gap: 8px;
+            justify-content: space-between;
+            gap: 15px;
         }
 
         .btn {
-            padding: 8px 16px;
+            flex: 1;
+            padding: 14px 30px;
             border: none;
-            border-radius: 6px;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
             cursor: pointer;
-            font-family: 'Tajawal', sans-serif;
-            font-weight: 700;
             transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
         }
 
-        .btn-view {
-            background: var(--info);
+        .btn-next {
+            background: var(--primary-green);
             color: white;
         }
 
-        .btn-view:hover {
-            background: #2980b9;
+        .btn-next:hover:not(:disabled) {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 134, 89, 0.3);
         }
 
-        .btn-call {
-            background: var(--success);
-            color: white;
+        .btn-next:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
-        .btn-call:hover {
-            background: #229954;
+        .btn-prev {
+            background: #f8f9fa;
+            color: var(--text-dark);
+            border: 1px solid #e0e0e0;
         }
 
-        .btn-primary {
-            background: var(--primary);
-            color: white;
+        .btn-prev:hover {
+            background: #e9ecef;
         }
 
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Modal */
+        /* Modal للحلول */
         .modal {
             display: none;
             position: fixed;
@@ -357,33 +257,35 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            padding: 20px;
+            z-index: 1000;
             overflow-y: auto;
+            padding: 20px;
         }
 
         .modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-content {
             background: white;
-            border-radius: 15px;
+            max-width: 900px;
+            margin: 40px auto;
+            border-radius: 20px;
             padding: 40px;
-            max-width: 800px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
             position: relative;
-            animation: slideUp 0.3s ease;
+            animation: slideDown 0.4s ease;
         }
 
-        @keyframes slideUp {
+        @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(-50px);
             }
             to {
                 opacity: 1;
@@ -395,240 +297,401 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            font-size: 2em;
-            background: none;
+            background: #dc3545;
+            color: white;
             border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5em;
             cursor: pointer;
-            color: #999;
-            transition: color 0.3s;
+            transition: all 0.3s;
         }
 
         .modal-close:hover {
-            color: var(--danger);
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
         }
 
         .modal-header {
             text-align: center;
             margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--border);
         }
 
-        .modal-header h3 {
+        .modal-header h2 {
+            color: var(--primary-green);
             font-size: 2em;
-            color: var(--primary);
             margin-bottom: 10px;
         }
 
-        .detail-grid {
+        .solution-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-right: 5px solid var(--primary-green);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .solution-box h4 {
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        .pack-section {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .pack-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
         }
 
-        .detail-item {
-            padding: 15px;
-            background: var(--light);
-            border-radius: 8px;
-        }
-
-        .detail-label {
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .detail-value {
-            color: var(--dark);
-            font-size: 1.1em;
-        }
-
-        .loading, .empty {
+        .pack-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
             text-align: center;
-            padding: 60px 20px;
-            color: #999;
+            transition: all 0.3s;
         }
 
-        .loading i, .empty i {
-            font-size: 3em;
-            margin-bottom: 20px;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .pack-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo">
-            <div class="logo-icon">🌾</div>
-            <h1>فلاحين</h1>
-            <p>لوحة التحكم</p>
+    <div class="container">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-right"></i>
+            رجوع للرئيسية
+        </a>
+
+        <div class="header">
+            <h1>
+                <span style="font-size: 1.2em;">🤖</span>
+                استشارة فلاحية مجانية
+            </h1>
+            <p>جاوب على الأسئلة واحصل على حلول مخصصة لمحصولك</p>
         </div>
 
-        <nav>
-            <a href="dashboard.html" class="nav-item">
-                <i class="fas fa-chart-line"></i>
-                <span>لوحة المعلومات</span>
-            </a>
-            <a href="products.html" class="nav-item">
-                <i class="fas fa-box"></i>
-                <span>إدارة المنتجات</span>
-            </a>
-            <a href="questions.html" class="nav-item">
-                <i class="fas fa-question-circle"></i>
-                <span>إدارة الأسئلة</span>
-            </a>
-            <a href="orders.html" class="nav-item">
-                <i class="fas fa-shopping-cart"></i>
-                <span>الطلبيات</span>
-            </a>
-            <a href="consultations.html" class="nav-item active">
-                <i class="fas fa-comments"></i>
-                <span>الاستشارات</span>
-            </a>
-        </nav>
-
-        <div class="admin-info">
-            <div class="admin-avatar">
-                <i class="fas fa-user-shield"></i>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
             </div>
-            <strong id="adminName">المدير</strong>
-            <p id="adminEmail" style="font-size: 0.85em; opacity: 0.8; margin-top: 5px;"></p>
-            <button class="logout-btn" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i> خروج
-            </button>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Header -->
-        <div class="page-header">
-            <h2>
-                <i class="fas fa-comments"></i>
-                الاستشارات الزراعية
-            </h2>
+            <div class="progress-text" id="progressText">سؤال 1 من 6</div>
         </div>
 
-        <!-- Stats -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #e8f5e9; color: var(--success);">
-                    <i class="fas fa-clipboard-list"></i>
+        <form id="consultationForm">
+            <!-- سؤال 1: المحصول -->
+            <div class="question-card active" data-question="1">
+                <div class="question-title">
+                    <span class="question-icon">🌱</span>
+                    <span>شنية المحصول متاعك؟</span>
                 </div>
-                <div class="stat-info">
-                    <h3 id="totalCount">-</h3>
-                    <p>إجمالي الاستشارات</p>
+                <div class="options-grid">
+                    <div class="option-card" data-crop="tomato">
+                        <span class="option-icon">🍅</span>
+                        <div class="option-label">طماطم</div>
+                    </div>
+                    <div class="option-card" data-crop="pepper">
+                        <span class="option-icon">🌶️</span>
+                        <div class="option-label">فلفل</div>
+                    </div>
+                    <div class="option-card" data-crop="grape">
+                        <span class="option-icon">🍇</span>
+                        <div class="option-label">عنب</div>
+                    </div>
+                    <div class="option-card" data-crop="fennel">
+                        <span class="option-icon">🌿</span>
+                        <div class="option-label">بسباس</div>
+                    </div>
+                    <div class="option-card" data-crop="potato">
+                        <span class="option-icon">🥔</span>
+                        <div class="option-label">بطاطا</div>
+                    </div>
+                    <div class="option-card" data-crop="watermelon">
+                        <span class="option-icon">🍈</span>
+                        <div class="option-label">بطيخ</div>
+                    </div>
+                    <div class="option-card" data-crop="melon">
+                        <span class="option-icon">🍉</span>
+                        <div class="option-label">دلاع</div>
+                    </div>
+                    <div class="option-card" data-crop="strawberry">
+                        <span class="option-icon">🍓</span>
+                        <div class="option-label">فراولة</div>
+                    </div>
+                    <div class="option-card" data-crop="almond">
+                        <span class="option-icon">🌰</span>
+                        <div class="option-label">لوزيات</div>
+                    </div>
+                    <div class="option-card" data-crop="grains">
+                        <span class="option-icon">🌾</span>
+                        <div class="option-label">حبوب</div>
+                    </div>
+                    <div class="option-card" data-crop="olive">
+                        <span class="option-icon">🫒</span>
+                        <div class="option-label">زيتون</div>
+                    </div>
+                    <div class="option-card" data-crop="citrus">
+                        <span class="option-icon">🍊</span>
+                        <div class="option-label">قوارص</div>
+                    </div>
+                </div>
+                <div class="nav-buttons">
+                    <button type="button" class="btn btn-prev" onclick="prevQuestion()" style="visibility: hidden; max-width: 200px;">السابق</button>
+                    <button type="button" class="btn btn-next" onclick="nextQuestion()" disabled>التالي</button>
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #e3f2fd; color: var(--info);">
-                    <i class="fas fa-calendar-day"></i>
+            <!-- سؤال 2: المساحة -->
+            <div class="question-card" data-question="2">
+                <div class="question-title">
+                    <span class="question-icon">📏</span>
+                    <span>قداش مساحة المزرعة متاعك؟</span>
                 </div>
-                <div class="stat-info">
-                    <h3 id="todayCount">-</h3>
-                    <p>استشارات اليوم</p>
+                <div class="options-grid">
+                    <div class="option-card" data-area="small">
+                        <span class="option-icon">🏡</span>
+                        <div class="option-label">أقل من 1 هكتار</div>
+                    </div>
+                    <div class="option-card" data-area="medium">
+                        <span class="option-icon">🌾</span>
+                        <div class="option-label">من 1 إلى 3 هكتار</div>
+                    </div>
+                    <div class="option-card" data-area="large">
+                        <span class="option-icon">🚜</span>
+                        <div class="option-label">أكثر من 3 هكتار</div>
+                    </div>
+                </div>
+                <div class="nav-buttons">
+                    <button type="button" class="btn btn-prev" onclick="prevQuestion()" >السابق</button>
+                    <button type="button" class="btn btn-next" onclick="nextQuestion()" disabled>التالي</button>
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #fff3cd; color: var(--warning);">
-                    <i class="fas fa-bell"></i>
+            <!-- سؤال 3: نظام الري -->
+            <div class="question-card" data-question="3">
+                <div class="question-title">
+                    <span class="question-icon">💧</span>
+                    <span>شنوة نظام الري اللي تستعملو؟</span>
                 </div>
-                <div class="stat-info">
-                    <h3 id="newCount">-</h3>
-                    <p>جديدة (لم يتم الرد)</p>
+                <div class="options-grid">
+                    <div class="option-card" data-water="drip">
+                        <span class="option-icon">💧</span>
+                        <div class="option-label">تنقيط</div>
+                    </div>
+                    <div class="option-card" data-water="sprinkler">
+                        <span class="option-icon">🚿</span>
+                        <div class="option-label">رش</div>
+                    </div>
+                    <div class="option-card" data-water="flood">
+                        <span class="option-icon">🌊</span>
+                        <div class="option-label">غمر</div>
+                    </div>
+                </div>
+                <div class="nav-buttons">
+                    <button type="button" class="btn btn-prev" onclick="prevQuestion()">السابق</button>
+                    <button type="button" class="btn btn-next" onclick="nextQuestion()" disabled>التالي</button>
+                    
                 </div>
             </div>
-        </div>
 
-        <!-- Filters -->
-        <div class="filters-card">
-            <div class="filters-grid">
-                <div class="filter-group">
-                    <label><i class="fas fa-search"></i> البحث</label>
-                    <input type="text" id="searchInput" placeholder="اسم، هاتف..." onkeyup="filterTable()">
+            <!-- سؤال 4: نوع التربة -->
+            <div class="question-card" data-question="4">
+                <div class="question-title">
+                    <span class="question-icon">🌍</span>
+                    <span>شنوة نوع التربة؟</span>
                 </div>
-                <div class="filter-group">
-                    <label><i class="fas fa-seedling"></i> المحصول</label>
-                    <select id="cropFilter" onchange="filterTable()">
-                        <option value="">الكل</option>
-                    </select>
+                <div class="options-grid">
+                    <div class="option-card" data-soil="sandy">
+                        <span class="option-icon">🏖️</span>
+                        <div class="option-label">رملية</div>
+                    </div>
+                    <div class="option-card" data-soil="clay">
+                        <span class="option-icon">🧱</span>
+                        <div class="option-label">طينية</div>
+                    </div>
+                    <div class="option-card" data-soil="loam">
+                        <span class="option-icon">🌱</span>
+                        <div class="option-label">مختلطة</div>
+                    </div>
                 </div>
-                <div class="filter-group">
-                    <label><i class="fas fa-map-marker-alt"></i> المنطقة</label>
-                    <select id="regionFilter" onchange="filterTable()">
-                        <option value="">الكل</option>
-                    </select>
+                <div class="nav-buttons">
+                    <button type="button" class="btn btn-prev" onclick="prevQuestion()">السابق</button>
+                    <button type="button" class="btn btn-next" onclick="nextQuestion()" disabled>التالي</button>
+                    
                 </div>
-                <div class="filter-group">
-                    <label style="opacity: 0;">.</label>
-                    <button class="btn btn-primary" onclick="loadConsultations()" style="width: 100%;">
-                        <i class="fas fa-sync-alt"></i>
-                        تحديث
+            </div>
+
+            <!-- سؤال 5: نسبة ملوحة الماء -->
+            <div class="question-card" data-question="5">
+                <div class="question-title">
+                    <span class="question-icon">🧂</span>
+                    <span>شنوة نسبة ملوحة ماء الري؟</span>
+                </div>
+                <div class="options-grid">
+                    <div class="option-card" data-salinity="low">
+                        <span class="option-icon">💧</span>
+                        <div class="option-label">منخفضة</div>
+                        <div style="font-size: 0.85em; color: #666; margin-top: 5px;">أقل من 1 g/L</div>
+                    </div>
+                    <div class="option-card" data-salinity="medium">
+                        <span class="option-icon">💦</span>
+                        <div class="option-label">متوسطة</div>
+                        <div style="font-size: 0.85em; color: #666; margin-top: 5px;">1-3 g/L</div>
+                    </div>
+                    <div class="option-card" data-salinity="high">
+                        <span class="option-icon">🌊</span>
+                        <div class="option-label">عالية</div>
+                        <div style="font-size: 0.85em; color: #666; margin-top: 5px;">أكثر من 3 g/L</div>
+                    </div>
+                </div>
+                <div class="nav-buttons">
+                    <button type="button" class="btn btn-prev" onclick="prevQuestion()">السابق</button>
+                    <button type="button" class="btn btn-next" onclick="nextQuestion()" disabled>التالي</button>
+                    
+                </div>
+            </div>
+
+            <!-- سؤال 6: الفترة/المرحلة -->
+            <div class="question-card" data-question="6">
+                <div class="question-title">
+                    <span class="question-icon">🌳</span>
+                    <span id="periodQuestion">في أي فترة من مراحل النمو؟</span>
+                </div>
+                <div class="options-grid" id="periodOptions">
+                    <!-- يتم ملؤها ديناميكياً حسب نوع المحصول -->
+                </div>
+                <div class="nav-buttons">
+                    <button type="button" class="btn btn-prev" onclick="prevQuestion()">السابق</button>
+                    <button type="button" class="btn btn-next" onclick="nextQuestion()" disabled>التالي</button>
+                    
+                </div>
+            </div>
+
+            <!-- سؤال 7: بيانات المستخدم -->
+            <div class="question-card" data-question="7">
+                <!-- رسالة النجاح -->
+                <div style="text-align: center; margin-bottom: 35px;">
+                    <div style="font-size: 3.5em; margin-bottom: 15px;">🎉</div>
+                    <h3 style="color: var(--primary-green); font-size: 1.6em; margin-bottom: 12px; font-weight: 600;">نتيجتك جاهزة!</h3>
+                    <p style="font-size: 1em; color: var(--text-light); line-height: 1.6;">قبل التمتع بها، اعطينا معلوماتك باش نخدموك أحسن</p>
+                </div>
+                
+                <!-- النموذج -->
+                <div style="max-width: 550px; margin: 0 auto;">
+                    <!-- الاسم -->
+                    <div style="margin-bottom: 22px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-dark); font-size: 0.95em; text-align: right;">
+                            <i class="fas fa-user" style="margin-left: 5px;"></i> الاسم الكامل <span style="color: red;">*</span>
+                        </label>
+                        <input type="text" id="userName" placeholder="مثال: محمد بن علي" required
+                            style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 1em; background: #f8f9fa; transition: all 0.3s; font-family: 'Tajawal', sans-serif;"
+                            onfocus="this.style.background='white'; this.style.borderColor='var(--primary-green)'"
+                            onblur="this.style.background='#f8f9fa'; this.style.borderColor='#e0e0e0'">
+                    </div>
+                    
+                    <!-- الهاتف -->
+                    <div style="margin-bottom: 22px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-dark); font-size: 0.95em; text-align: right;">
+                            <i class="fas fa-phone" style="margin-left: 5px;"></i> رقم الهاتف <span style="color: red;">*</span>
+                        </label>
+                        <input type="tel" id="userPhone" placeholder="مثال: 20123456" required pattern="[0-9]{8}"
+                            style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 1em; background: #f8f9fa; transition: all 0.3s; font-family: 'Tajawal', sans-serif;"
+                            onfocus="this.style.background='white'; this.style.borderColor='var(--primary-green)'"
+                            onblur="this.style.background='#f8f9fa'; this.style.borderColor='#e0e0e0'"
+                            title="أدخل 8 أرقام">
+                    </div>
+                    
+                    <!-- المنطقة -->
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-dark); font-size: 0.95em; text-align: right;">
+                            <i class="fas fa-map-marker-alt" style="margin-left: 5px;"></i> المنطقة <span style="color: red;">*</span>
+                        </label>
+                        <select id="userRegion" required
+                            style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 1em; background: #f8f9fa; font-family: 'Tajawal', sans-serif; cursor: pointer; transition: all 0.3s;"
+                            onfocus="this.style.background='white'; this.style.borderColor='var(--primary-green)'"
+                            onblur="this.style.background='#f8f9fa'; this.style.borderColor='#e0e0e0'">
+                            <option value="">اختار المنطقة متاعك...</option>
+                            <option value="tunis">تونس</option>
+                            <option value="ariana">أريانة</option>
+                            <option value="ben-arous">بن عروس</option>
+                            <option value="manouba">منوبة</option>
+                            <option value="nabeul">نابل</option>
+                            <option value="zaghouan">زغوان</option>
+                            <option value="bizerte">بنزرت</option>
+                            <option value="beja">باجة</option>
+                            <option value="jendouba">جندوبة</option>
+                            <option value="kef">الكاف</option>
+                            <option value="siliana">سليانة</option>
+                            <option value="kairouan">القيروان</option>
+                            <option value="kasserine">القصرين</option>
+                            <option value="sidi-bouzid">سيدي بوزيد</option>
+                            <option value="sousse">سوسة</option>
+                            <option value="monastir">المنستير</option>
+                            <option value="mahdia">المهدية</option>
+                            <option value="sfax">صفاقس</option>
+                            <option value="gafsa">قفصة</option>
+                            <option value="tozeur">توزر</option>
+                            <option value="kebili">قبلي</option>
+                            <option value="gabes">قابس</option>
+                            <option value="medenine">مدنين</option>
+                            <option value="tataouine">تطاوين</option>
+                        </select>
+                    </div>
+                    
+                    <!-- رسالة الخصوصية -->
+                    <div style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); padding: 14px 18px; border-radius: 10px; margin-bottom: 25px; border-right: 4px solid var(--primary-green);">
+                        <div style="display: flex; align-items: start; gap: 10px;">
+                            <i class="fas fa-lock" style="color: var(--primary-green); margin-top: 2px; font-size: 1.1em;"></i>
+                            <p style="color: #155724; font-size: 0.9em; line-height: 1.6; margin: 0;">
+                                معلوماتك آمنة ومحمية - نستخدموها فقط باش نحسّنو الخدمة متاعنا
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الأزرار -->
+                <div class="nav-buttons" style="margin-top: 30px;">
+                    <button type="button" class="btn btn-prev" onclick="prevQuestion()" style="max-width: 150px;">السابق</button>
+                    <button type="button" class="btn btn-next" onclick="showResults()" style="padding: 16px 40px; font-size: 1.05em; box-shadow: 0 4px 12px rgba(45, 134, 89, 0.25);">
+                        <i class="fas fa-check-circle" style="margin-left: 8px;"></i>
+                        عرض الحلول توّا
                     </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Table -->
-        <div class="table-card">
-            <table>
-                <thead>
-                    <tr>
-                        <th>التاريخ</th>
-                        <th>الاسم</th>
-                        <th>الهاتف</th>
-                        <th>المحصول</th>
-                        <th>المنطقة</th>
-                        <th>الحالة</th>
-                        <th>الإجراءات</th>
-                    </tr>
-                </thead>
-                <tbody id="consultationsBody">
-                    <tr>
-                        <td colspan="7" class="loading">
-                            <div class="spinner"></div>
-                            <p>جاري تحميل البيانات...</p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        </form>
     </div>
 
-    <!-- Details Modal -->
-    <div class="modal" id="detailsModal">
+    <!-- Modal للحلول -->
+    <div class="modal" id="resultsModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">×</button>
             <div class="modal-header">
-                <h3>📋 تفاصيل الاستشارة</h3>
-                <p>المعلومات الكاملة للاستشارة</p>
+                <h2>🎉 حلولك جاهزة!</h2>
+                <p style="color: var(--text-light);">إليك الحلول المخصصة لمحصولك</p>
             </div>
-            <div id="consultationDetails"></div>
+            <div id="resultsContent">
+                <!-- يتم ملؤها ديناميكياً -->
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-next" onclick="closeModal()" style="max-width: 300px;">
+                    إغلاق
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Firebase Config
+        // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyC-z9igQOo7PbKiTzhi2fIRrHHuUXhN6AU",
             authDomain: "fla7in.firebaseapp.com",
@@ -644,215 +707,415 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
-        const auth = firebase.auth();
+        window.db = db;
 
-        let allConsultations = [];
+        // State
+        let formData = {
+            crop: '',
+            area: '',
+            water: '',
+            soil: '',
+            salinity: '',
+            period: '',
+            name: '',
+            phone: '',
+            region: ''
+        };
 
-        // Check auth
-        auth.onAuthStateChanged(function(user) {
-            if (user) {
-                document.getElementById('adminEmail').textContent = user.email;
-                loadConsultations();
-            } else {
-                window.location.href = 'index.html';
-            }
+        let currentQuestion = 1;
+        const totalQuestions = 7;
+
+        const treeCrops = ['olive', 'almond', 'grape', 'citrus'];
+        const firebaseCrops = ['olive', 'almond', 'grains', 'fennel', 'grape', 'citrus', 'tomato', 'pepper', 'potato', 'watermelon', 'melon', 'strawberry'];
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            updateProgress();
         });
 
-        // Load Consultations
-        window.loadConsultations = function() {
-            const tbody = document.getElementById('consultationsBody');
-            tbody.innerHTML = '<tr><td colspan="7" class="loading"><div class="spinner"></div><p>جاري تحميل البيانات...</p></td></tr>';
-
-            db.collection('consultations')
-                .orderBy('createdAt', 'desc')
-                .get()
-                .then(function(snapshot) {
-                    allConsultations = [];
-                    snapshot.forEach(function(doc) {
-                        allConsultations.push({ id: doc.id, ...doc.data() });
-                    });
-
-                    updateStats();
-                    populateFilters();
-                    displayConsultations(allConsultations);
-                })
-                .catch(function(error) {
-                    console.error('Error:', error);
-                    tbody.innerHTML = '<tr><td colspan="7" class="empty"><i class="fas fa-exclamation-triangle"></i><p>حدث خطأ في تحميل البيانات</p></td></tr>';
+        function setupEventListeners() {
+            // Crop selection
+            document.querySelectorAll('[data-crop]').forEach(card => {
+                card.addEventListener('click', function() {
+                    selectOption(this, 'crop', this.dataset.crop);
+                    setTimeout(() => nextQuestion(), 500);
                 });
-        }
-
-        function updateStats() {
-            document.getElementById('totalCount').textContent = allConsultations.length;
-
-            const today = new Date().toDateString();
-            const todayCount = allConsultations.filter(c => {
-                if (!c.createdAt) return false;
-                return c.createdAt.toDate().toDateString() === today;
-            }).length;
-            document.getElementById('todayCount').textContent = todayCount;
-
-            const newCount = allConsultations.filter(c => !c.status || c.status === 'new').length;
-            document.getElementById('newCount').textContent = newCount;
-        }
-
-        function populateFilters() {
-            const crops = [...new Set(allConsultations.map(c => c.cropName).filter(Boolean))];
-            const regions = [...new Set(allConsultations.map(c => c.region).filter(Boolean))];
-
-            const cropFilter = document.getElementById('cropFilter');
-            cropFilter.innerHTML = '<option value="">الكل</option>' +
-                crops.map(c => `<option value="${c}">${c}</option>`).join('');
-
-            const regionFilter = document.getElementById('regionFilter');
-            regionFilter.innerHTML = '<option value="">الكل</option>' +
-                regions.map(r => `<option value="${r}">${getRegionName(r)}</option>`).join('');
-        }
-
-        function displayConsultations(consultations) {
-            const tbody = document.getElementById('consultationsBody');
-
-            if (consultations.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="empty"><i class="fas fa-inbox"></i><p>لا توجد استشارات بعد</p></td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = consultations.map(c => {
-                const date = c.createdAt ? c.createdAt.toDate().toLocaleString('ar-TN', {
-                    year: 'numeric', month: 'short', day: 'numeric',
-                    hour: '2-digit', minute: '2-digit'
-                }) : 'غير محدد';
-
-                const status = c.status || 'new';
-                const statusClass = status === 'new' ? 'status-new' :
-                    status === 'contacted' ? 'status-contacted' : 'status-completed';
-                const statusText = status === 'new' ? 'جديد' :
-                    status === 'contacted' ? 'تم الاتصال' : 'مكتمل';
-
-                return `
-                    <tr>
-                        <td style="white-space: nowrap;">${date}</td>
-                        <td><strong>${c.name || '-'}</strong></td>
-                        <td><a href="tel:${c.phone}" style="color: var(--primary); text-decoration: none; font-weight: 700;">${c.phone || '-'}</a></td>
-                        <td>${c.cropName || '-'}</td>
-                        <td>${getRegionName(c.region)}</td>
-                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn btn-view" onclick="viewDetails('${c.id}')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-call" onclick="callCustomer('${c.phone}')">
-                                    <i class="fas fa-phone"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        window.filterTable = function() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const cropFilter = document.getElementById('cropFilter').value;
-            const regionFilter = document.getElementById('regionFilter').value;
-
-            const filtered = allConsultations.filter(c => {
-                const matchSearch = !search ||
-                    (c.name && c.name.toLowerCase().includes(search)) ||
-                    (c.phone && c.phone.includes(search));
-                const matchCrop = !cropFilter || c.cropName === cropFilter;
-                const matchRegion = !regionFilter || c.region === regionFilter;
-
-                return matchSearch && matchCrop && matchRegion;
             });
 
-            displayConsultations(filtered);
+            // Area selection
+            document.querySelectorAll('[data-area]').forEach(card => {
+                card.addEventListener('click', function() {
+                    selectOption(this, 'area', this.dataset.area);
+                    setTimeout(() => nextQuestion(), 500);
+                });
+            });
+
+            // Water selection
+            document.querySelectorAll('[data-water]').forEach(card => {
+                card.addEventListener('click', function() {
+                    selectOption(this, 'water', this.dataset.water);
+                    setTimeout(() => nextQuestion(), 500);
+                });
+            });
+
+            // Soil selection
+            document.querySelectorAll('[data-soil]').forEach(card => {
+                card.addEventListener('click', function() {
+                    selectOption(this, 'soil', this.dataset.soil);
+                    setTimeout(() => nextQuestion(), 500);
+                });
+            });
+            
+            // Salinity selection
+            document.querySelectorAll('[data-salinity]').forEach(card => {
+                card.addEventListener('click', function() {
+                    selectOption(this, 'salinity', this.dataset.salinity);
+                    setTimeout(() => nextQuestion(), 500);
+                    // بعد اختيار الملوحة، نحضّر سؤال الفترة
+                    preparePeriodQuestion();
+                });
+            });
         }
 
-        window.viewDetails = function(id) {
-            const consultation = allConsultations.find(c => c.id === id);
-            if (!consultation) return;
-
-            const details = document.getElementById('consultationDetails');
-            details.innerHTML = `
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <div class="detail-label"><i class="fas fa-calendar"></i> التاريخ</div>
-                        <div class="detail-value">${consultation.createdAt ? consultation.createdAt.toDate().toLocaleString('ar-TN') : '-'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label"><i class="fas fa-user"></i> الاسم</div>
-                        <div class="detail-value">${consultation.name || '-'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label"><i class="fas fa-phone"></i> الهاتف</div>
-                        <div class="detail-value"><a href="tel:${consultation.phone}" style="color: var(--primary);">${consultation.phone || '-'}</a></div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label"><i class="fas fa-map-marker-alt"></i> المنطقة</div>
-                        <div class="detail-value">${getRegionName(consultation.region)}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label"><i class="fas fa-seedling"></i> المحصول</div>
-                        <div class="detail-value">${consultation.cropName || '-'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label"><i class="fas fa-ruler"></i> المساحة</div>
-                        <div class="detail-value">${consultation.area || '-'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label"><i class="fas fa-tint"></i> نظام الري</div>
-                        <div class="detail-value">${consultation.water || '-'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label"><i class="fas fa-mountain"></i> التربة</div>
-                        <div class="detail-value">${consultation.soil || '-'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label"><i class="fas fa-vial"></i> الملوحة</div>
-                        <div class="detail-value">${consultation.salinity || '-'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label"><i class="fas fa-calendar-alt"></i> الفترة</div>
-                        <div class="detail-value">${consultation.period || '-'}</div>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('detailsModal').classList.add('show');
+        function selectOption(element, field, value) {
+            console.log('Selected:', field, value); // للتشخيص
+            
+            // Remove selected from siblings
+            element.parentElement.querySelectorAll('.option-card').forEach(c => {
+                c.classList.remove('selected');
+            });
+            
+            // Add selected to this
+            element.classList.add('selected');
+            
+            console.log('Element classes:', element.className); // للتشخيص
+            
+            // Save value
+            formData[field] = value;
+            
+            // Enable next button
+            const currentCard = document.querySelector('.question-card.active');
+            const nextBtn = currentCard.querySelector('.btn-next');
+            if (nextBtn) {
+                nextBtn.disabled = false;
+            }
+            
+            // Scroll to show the buttons (smooth scroll)
+            setTimeout(() => {
+                const navButtons = currentCard.querySelector('.nav-buttons');
+                if (navButtons) {
+                    navButtons.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
         }
 
-        window.callCustomer = function(phone) {
-            if (phone) {
-                window.location.href = `tel:${phone}`;
+        function preparePeriodQuestion() {
+            const isTree = treeCrops.includes(formData.crop);
+            const optionsContainer = document.getElementById('periodOptions');
+            
+            let options = '';
+            
+            if (isTree) {
+                // أسئلة الأشجار
+                options = `
+                    <div class="option-card" data-period="dormancy">
+                        <span class="option-icon">🌙</span>
+                        <div class="option-label">فترة السبات</div>
+                    </div>
+                    <div class="option-card" data-period="flowering">
+                        <span class="option-icon">🌸</span>
+                        <div class="option-label">فترة التزهير</div>
+                    </div>
+                    <div class="option-card" data-period="fruit-set">
+                        <span class="option-icon">🌼</span>
+                        <div class="option-label">فترة العقد</div>
+                    </div>
+                    <div class="option-card" data-period="ripening">
+                        <span class="option-icon">🍇</span>
+                        <div class="option-label">نضج الثمار</div>
+                    </div>
+                `;
+            } else {
+                // أسئلة الخضروات
+                options = `
+                    <div class="option-card" data-period="short">
+                        <span class="option-icon">🌱</span>
+                        <div class="option-label">15-45 يوم</div>
+                    </div>
+                    <div class="option-card" data-period="medium">
+                        <span class="option-icon">🌿</span>
+                        <div class="option-label">45-60 يوم</div>
+                    </div>
+                    <div class="option-card" data-period="long">
+                        <span class="option-icon">🌾</span>
+                        <div class="option-label">60-90 يوم</div>
+                    </div>
+                    <div class="option-card" data-period="harvest">
+                        <span class="option-icon">🍅</span>
+                        <div class="option-label">90+ يوم (قبل الجني)</div>
+                    </div>
+                `;
+            }
+            
+            optionsContainer.innerHTML = options;
+            
+            // Add event listeners
+            optionsContainer.querySelectorAll('[data-period]').forEach(card => {
+                card.addEventListener('click', function() {
+                    selectOption(this, 'period', this.dataset.period);
+                    setTimeout(() => nextQuestion(), 500);
+                });
+            });
+        }
+
+        window.nextQuestion = function() {
+            if (currentQuestion < totalQuestions) {
+                // Hide current
+                document.querySelector(`[data-question="${currentQuestion}"]`).classList.remove('active');
+                // Show next
+                currentQuestion++;
+                document.querySelector(`[data-question="${currentQuestion}"]`).classList.add('active');
+                // Update progress
+                updateProgress();
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        window.prevQuestion = function() {
+            if (currentQuestion > 1) {
+                // Hide current
+                document.querySelector(`[data-question="${currentQuestion}"]`).classList.remove('active');
+                // Show previous
+                currentQuestion--;
+                document.querySelector(`[data-question="${currentQuestion}"]`).classList.add('active');
+                // Update progress
+                updateProgress();
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function updateProgress() {
+            const progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `سؤال ${currentQuestion} من ${totalQuestions}`;
+        }
+
+        window.showResults = async function() {
+            // Validate required fields
+            const userName = document.getElementById('userName').value.trim();
+            const userPhone = document.getElementById('userPhone').value.trim();
+            const userRegion = document.getElementById('userRegion').value;
+            
+            if (!userName) {
+                alert('⚠️ الرجاء إدخال الاسم الكامل');
+                document.getElementById('userName').focus();
+                return;
+            }
+            
+            if (!userPhone) {
+                alert('⚠️ الرجاء إدخال رقم الهاتف');
+                document.getElementById('userPhone').focus();
+                return;
+            }
+            
+            if (userPhone.length !== 8 || !/^\d+$/.test(userPhone)) {
+                alert('⚠️ رقم الهاتف يجب أن يكون 8 أرقام');
+                document.getElementById('userPhone').focus();
+                return;
+            }
+            
+            if (!userRegion) {
+                alert('⚠️ الرجاء اختيار المنطقة');
+                document.getElementById('userRegion').focus();
+                return;
+            }
+            
+            // Get user data
+            formData.name = userName;
+            formData.phone = userPhone;
+            formData.region = userRegion;
+            
+            console.log('🔍 البيانات قبل الحفظ:', {
+                name: userName,
+                phone: userPhone,
+                region: userRegion,
+                crop: formData.crop,
+                cropName: getCropName(formData.crop)
+            });
+
+            // حفظ الاستشارة في Firebase
+            try {
+                const dataToSave = {
+                    name: formData.name,
+                    phone: formData.phone,
+                    region: formData.region,
+                    crop: formData.crop,
+                    cropName: getCropName(formData.crop),
+                    area: formData.area,
+                    water: formData.water,
+                    soil: formData.soil,
+                    salinity: formData.salinity,
+                    period: formData.period,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'new'
+                };
+                
+                console.log('💾 البيانات اللي راح تنحفظ:', dataToSave);
+                
+                await db.collection('consultations').add(dataToSave);
+                console.log('✅ تم حفظ الاستشارة في Firebase');
+                console.log('📊 البيانات:', {
+                    name: formData.name,
+                    phone: formData.phone,
+                    crop: getCropName(formData.crop)
+                });
+            } catch (error) {
+                console.error('❌ خطأ في حفظ الاستشارة:', error);
+                alert('⚠️ خطأ في حفظ البيانات: ' + error.message);
+            }
+
+            // Show loading
+            const modal = document.getElementById('resultsModal');
+            const content = document.getElementById('resultsContent');
+            content.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin" style="font-size: 3em; color: var(--primary-green);"></i><p style="margin-top: 20px;">جاري تحضير حلولك...</p></div>';
+            modal.classList.add('show');
+
+            // Get solutions from Firebase
+            try {
+                const useFirebase = firebaseCrops.includes(formData.crop);
+                const isTree = treeCrops.includes(formData.crop);
+                
+                let solutions = '';
+                
+                if (useFirebase) {
+                    solutions = await getSolutionsFromFirebase(formData.crop, formData.period, isTree);
+                } else {
+                    solutions = '<div style="padding: 20px; background: #fff3cd; border-radius: 10px; text-align: center;">الحلول قيد التطوير لهذا المحصول</div>';
+                }
+
+                // Display results
+                content.innerHTML = `
+                    <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 25px; border-radius: 15px; margin-bottom: 25px;">
+                        <h3 style="color: var(--primary-green); margin-bottom: 15px;">
+                            ${getCropName(formData.crop)} - ${getPeriodName(formData.period, isTree)}
+                        </h3>
+                        <div style="background: white; padding: 15px; border-radius: 10px;">
+                            <strong>📊 معلومات المزرعة:</strong> المساحة: ${formData.area} | الري: ${formData.water} | التربة: ${formData.soil}
+                        </div>
+                    </div>
+                    ${solutions}
+                    <div class="pack-section">
+                        <h3 style="color: #1565c0; margin-bottom: 20px;">📦 Pack المنتجات الموصى بها</h3>
+                        <p>سيتم عرض المنتجات قريباً</p>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error:', error);
+                content.innerHTML = '<div style="padding: 20px; background: #f8d7da; border-radius: 10px; text-align: center; color: #721c24;">حدث خطأ في جلب الحلول</div>';
+            }
+        }
+
+        async function getSolutionsFromFirebase(crop, period, isTree) {
+            const fieldName = isTree ? 'treeStage' : 'period';
+            
+            const snapshot = await db.collection('solutions')
+                .where('crop', '==', crop)
+                .where(fieldName, '==', period)
+                .where('active', '==', true)
+                .get();
+
+            if (snapshot.empty) {
+                return '<div style="padding: 20px; background: #fff3cd; border-radius: 10px; text-align: center;">لا توجد حلول محددة لهذه الفترة حالياً</div>';
+            }
+
+            let html = '';
+            let productIndex = 1;
+            
+            snapshot.forEach(doc => {
+                const solution = doc.data();
+                
+                if (solution.products && solution.products.length > 0) {
+                    solution.products.forEach(product => {
+                        html += `
+                            <div class="solution-box">
+                                <div style="display: flex; align-items: start; gap: 15px;">
+                                    <span style="font-size: 2em;">${product.icon || '🌱'}</span>
+                                    <div style="flex: 1;">
+                                        <h4>${productIndex}. ${product.name}</h4>
+                                        <div style="background: var(--warm-beige); padding: 10px; border-radius: 8px; margin: 10px 0;">
+                                            <strong>📏 الجرعة:</strong> ${product.dosage || product.dose}
+                                        </div>
+                                        ${product.timing ? `
+                                            <div style="background: #e8f5e9; padding: 10px; border-radius: 8px; margin: 10px 0;">
+                                                <strong>⏰ التوقيت:</strong> ${product.timing}
+                                            </div>
+                                        ` : ''}
+                                        <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
+                                            <strong>💡 علاش؟</strong> ${product.purpose || product.reason}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        productIndex++;
+                    });
+                }
+            });
+
+            return html;
+        }
+
+        function getCropName(crop) {
+            const names = {
+                'tomato': 'الطماطم',
+                'pepper': 'الفلفل',
+                'grape': 'العنب',
+                'fennel': 'البسباس',
+                'potato': 'البطاطا',
+                'watermelon': 'البطيخ',
+                'grains': 'الحبوب',
+                'olive': 'الزيتون',
+                'strawberry': 'الفراولة',
+                'melon': 'الدلاع',
+                'almond': 'اللوز',
+                'citrus': 'القوارص'
+            };
+            return names[crop] || crop;
+        }
+
+        function getPeriodName(period, isTree) {
+            if (isTree) {
+                const names = {
+                    'dormancy': 'فترة السبات',
+                    'flowering': 'فترة التزهير',
+                    'fruit-set': 'فترة العقد',
+                    'ripening': 'نضج الثمار'
+                };
+                return names[period] || period;
+            } else {
+                const names = {
+                    'short': 'من 15 إلى 45 يوم',
+                    'medium': 'من 45 إلى 60 يوم',
+                    'long': 'من 60 إلى 90 يوم',
+                    'harvest': 'من 90 يوم إلى الجني'
+                };
+                return names[period] || period;
             }
         }
 
         window.closeModal = function() {
-            document.getElementById('detailsModal').classList.remove('show');
+            document.getElementById('resultsModal').classList.remove('show');
         }
 
-        function getRegionName(code) {
-            const regions = {
-                tunis: 'تونس', ariana: 'أريانة', 'ben-arous': 'بن عروس',
-                manouba: 'منوبة', nabeul: 'نابل', zaghouan: 'زغوان',
-                bizerte: 'بنزرت', beja: 'باجة', jendouba: 'جندوبة',
-                kef: 'الكاف', siliana: 'سليانة', kairouan: 'القيروان',
-                kasserine: 'القصرين', 'sidi-bouzid': 'سيدي بوزيد',
-                sousse: 'سوسة', monastir: 'المنستير', mahdia: 'المهدية',
-                sfax: 'صفاقس', gafsa: 'قفصة', tozeur: 'توزر',
-                kebili: 'قبلي', gabes: 'قابس', medenine: 'مدنين',
-                tataouine: 'تطاوين'
-            };
-            return regions[code] || code || '-';
-        }
-
-        function logout() {
-            auth.signOut().then(function() {
-                window.location.href = 'index.html';
-            });
-        }
+        // Close modal when clicking outside
+        document.getElementById('resultsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
